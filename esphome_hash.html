@@ -1,1 +1,43 @@
-ESPHome hash computation
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Convert ESPHome name into Hash ID to be used as "Forced Id" with ha-ble-adv</h1>
+<label for="entityName">ESPHome entity name</label>    
+<input type="text" id="entityName" size="30" >
+
+<br />
+<br />
+
+<button id="btnConvert">Convert</button>
+
+<br />
+<br />
+
+<label for="hashID">Hash ID</label>
+<input type="text" id="hashID" size="10">
+
+
+<script type="text/javascript">
+
+function fnv1_hash(str) {
+    let hash = BigInt(2166136261);
+    let mult = BigInt(16777619)
+    let hmax = BigInt(0xFFFFFFFF)
+    for (let i = 0; i < str.length; i++) {
+        hash = ((hash * mult) & hmax) ^ BigInt(str.charCodeAt(i));
+    }
+    return hash
+}
+
+document.getElementById('btnConvert').addEventListener('click', ()=>{
+    let result = fnv1_hash(document.getElementById('entityName').value.toLowerCase().replaceAll(/[^a-z0-9_]/g, "_"));        
+    document.getElementById('hashID').value = "0x" + result.toString(16).toUpperCase();
+});
+
+
+
+</script>
+
+</body>
+</html>
